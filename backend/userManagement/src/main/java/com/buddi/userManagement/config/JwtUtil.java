@@ -4,12 +4,16 @@ import java.util.Date;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
 
-    private String secretKey = "your-secret-key"; // Use a strong key for production
+	@Value("${jwt.secret.key}")
+	private String secretKey;
 
     public String generateToken(String username) {
         return Jwts.builder()
