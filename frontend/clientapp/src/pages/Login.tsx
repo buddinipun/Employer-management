@@ -2,22 +2,22 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Container, Form, Button, Alert } from "react-bootstrap";
-import { login } from "../services/authService.ts";
+import { useDispatch } from "react-redux";
+import { login as loginService } from "../services/authService.ts";
+import { login } from "../redux/slices/loginSlice";
+import { AppDispatch } from "../redux/store.ts";
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch<AppDispatch>();
   // Handle form submission
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await login({ username, password });
-      localStorage.setItem("accessToken", response.token);
-      navigate("/dashboard"); // Redirect to Employee Dashboard
-    } catch (err) {
-      setError("Invalid username or password");
+    const result = dispatch(login({ username, password }));
+    if (login.fulfilled.match(result)) {
+      navigate("/dashboard");
     }
   };
 
